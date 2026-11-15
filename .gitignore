@@ -1,0 +1,4 @@
+dist/
+node_modules/
+*.tgz
+packages/mcp/plugin-server/

@@ -1,0 +1,54 @@
+{
+  "$schema": "https://anthropic.com/claude-code/plugin.schema.json",
+  "name": "kleora",
+  "displayName": "Kleora",
+  "version": "0.1.0",
+  "description": "Manage your Kleora account from your coding agent: apps, clients, users, tenants, roles and the audit log, as you, over the management API — plus the skills that say how to use them correctly.",
+  "author": {
+    "name": "Kleora"
+  },
+  "homepage": "https://github.com/kleora-io/agent-plugins/tree/main/plugins/claude-code",
+  "repository": "https://github.com/kleora-io/agent-plugins",
+  "license": "Apache-2.0",
+  "keywords": ["kleora", "authentication", "oauth", "oidc", "identity", "mcp"],
+  "userConfig": {
+    "api_base_url": {
+      "type": "string",
+      "title": "Management API base URL",
+      "description": "Leave empty to use the hosted platform, https://api.kleora.io. Set it only if you run Kleora yourself and point it at your own management API. One URL covers both sandbox and production — they are separate environments behind the same API, not separate hosts.",
+      "default": "https://api.kleora.io",
+      "required": false
+    },
+    "profile": {
+      "type": "string",
+      "title": "Credential profile",
+      "description": "Leave empty to use the profile named \"default\". Which stored credential to use: two accounts (say your own and a client's) means two profiles, each authorised separately, so a call can never be made as whoever signed in last.",
+      "default": "default"
+    },
+    "read_only": {
+      "type": "boolean",
+      "title": "Read-only",
+      "description": "Drop every tool that writes, so the agent can look but not change anything. A host cannot approve a call that was never offered.",
+      "default": false
+    },
+    "issuer": {
+      "type": "string",
+      "title": "Issuer URL (advanced)",
+      "description": "Where the browser sign-in happens. Leave empty: the server asks the management API for it (/api/v1/platform). Set it only for a development setup whose API cannot describe it.",
+      "default": ""
+    }
+  },
+  "mcpServers": {
+    "kleora": {
+      "command": "node",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/server/kleora-mcp.mjs"],
+      "env": {
+        "KLEORA_MCP_BASE_URL": "${user_config.api_base_url}",
+        "KLEORA_MCP_PROFILE": "${user_config.profile}",
+        "KLEORA_MCP_READ_ONLY": "${user_config.read_only}",
+        "KLEORA_MCP_ISSUER": "${user_config.issuer}"
+      }
+    }
+  },
+  "skills": ["./skills/"]
+}

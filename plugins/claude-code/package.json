@@ -1,0 +1,10 @@
+{
+  "name": "@kleora-io/claude-code-plugin",
+  "private": true,
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "description": "Declares the one optional native module the bundled MCP server can use. Everything else the server needs is inside server/kleora-mcp.mjs.",
+  "optionalDependencies": {
+    "@napi-rs/keyring": "^2.0.0"
+  }
+}

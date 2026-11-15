@@ -1,0 +1,73 @@
+# Build, lint, typecheck and test the MCP server, then check the three things
+# that are generated and committed: the plugin's server bundle, the tool
+# definitions (against the OpenAPI document Kleora serves), and the one version
+# the server and the plugin share.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: pnpm/action-setup@v6
+        with:
+          run_install: false
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      # Includes the plugin's own tests: the committed bundle says it is
+      # generated, imports nothing an installed plugin cannot resolve, and
+      # starts and exits cleanly from a directory with no node_modules.
+      - name: Test
+        run: pnpm test
+
+      # The four version literals agree, and the package has the shape npm's
+      # trusted publishing accepts from this repository.
+      - name: One version for the server and the plugin
+        run: pnpm check:versions
+
+      # Rebuilds plugins/claude-code/server/{kleora-mcp.mjs,THIRD-PARTY-NOTICES}
+      # into a temporary directory and compares. A diff means a change to
+      # packages/mcp or its dependencies never reached the plugin: run
+      # `pnpm plugin-server` and commit the result.
+      - name: The plugin's server bundle matches the source
+        run: pnpm check:plugin-server
+
+      # Re-downloads https://api.kleora.io/api/v1/openapi.json into
+      # `openapi/management-v1.json` and regenerates
+      # `packages/mcp/src/generated/operations.ts` from it. A diff means the
+      # deployed API moved: run `pnpm generate:tools`, then `pnpm plugin-server`,
+      # and commit the result.
+      - name: Tool definitions match the deployed document
+        run: |
+          pnpm generate:tools
+          git diff --exit-code -- openapi packages/mcp/src/generated
+          test -z "$(git status --porcelain -- openapi packages/mcp/src/generated)"
