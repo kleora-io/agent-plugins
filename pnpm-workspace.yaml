@@ -1,0 +1,11 @@
+packages:
+  - packages/*
+
+# Build scripts are opt-in; tsup and vitest need esbuild's.
+allowBuilds:
+  esbuild: true
+
+# pnpm holds back versions published in the last day. Kleora's own packages are
+# exempt, so a fix released in @kleora-io/core can be taken up the same day.
+minimumReleaseAgeExclude:
+  - '@kleora-io/*'

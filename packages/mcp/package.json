@@ -1,0 +1,62 @@
+{
+  "name": "@kleora-io/mcp",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "The Kleora MCP server: a local stdio server that lets an LLM agent manage a Kleora account through the management API, as the person who authorised it.",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/kleora-io/agent-plugins/tree/main/packages/mcp#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kleora-io/agent-plugins.git",
+    "directory": "packages/mcp"
+  },
+  "bugs": {
+    "url": "https://github.com/kleora-io/agent-plugins/issues"
+  },
+  "sideEffects": false,
+  "engines": {
+    "node": ">=20"
+  },
+  "bin": {
+    "kleora-mcp": "./dist/index.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "generate:tools": "node scripts/generate-tools.mjs",
+    "build": "tsup",
+    "build:plugin": "tsup --config tsup.plugin.config.ts",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@kleora-io/core": "^0.1.1",
+    "@modelcontextprotocol/sdk": "^1.30.0",
+    "ajv": "^8.17.1",
+    "zod": "^4.1.13"
+  },
+  "optionalDependencies": {
+    "@napi-rs/keyring": "^2.0.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^24.10.0",
+    "eslint": "^10.0.0",
+    "openapi-typescript": "^7.13.0",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.68.0",
+    "vitest": "^4.1.11"
+  }
+}

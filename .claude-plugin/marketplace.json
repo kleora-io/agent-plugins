@@ -1,0 +1,17 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "kleora",
+  "description": "Kleora's own agent plugins. Install the Kleora plugin to manage apps, clients, users, tenants, roles and the audit log from your coding agent, as yourself.",
+  "owner": {
+    "name": "Kleora"
+  },
+  "plugins": [
+    {
+      "name": "kleora",
+      "source": "./plugins/claude-code",
+      "description": "Manage your Kleora account from your coding agent: apps, clients, users, tenants, roles and the audit log, as you, over the management API — plus the skills that say how to use them correctly.",
+      "category": "development",
+      "keywords": ["kleora", "authentication", "oauth", "oidc", "identity", "mcp"]
+    }
+  ]
+}
